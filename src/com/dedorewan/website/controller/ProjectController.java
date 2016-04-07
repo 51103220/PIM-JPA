@@ -194,13 +194,16 @@ public class ProjectController {
 	@RequestMapping(method = RequestMethod.POST, value = "/EditProject")
 	@ResponseBody
 	public JsonResponse editProject(@Validated @RequestBody Project project,
-			BindingResult result) throws Exception {
+			BindingResult result,HttpServletRequest request) throws Exception {
 
 		if (result.hasErrors()) {
 			jsonResponse.setStatus("FAIL");
 			jsonResponse.setResult(result.getFieldErrors());
 		} else {
 			projectService.updateProject(project);
+			request.getSession().setAttribute("searchValue", "");
+			request.getSession().setAttribute("statusKey", null);
+			request.getSession().setAttribute("projectList", projectService.findAll());
 			jsonResponse.setStatus("SUCCESS");
 		}
 		return jsonResponse;

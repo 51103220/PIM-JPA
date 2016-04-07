@@ -3,8 +3,13 @@ package com.dedorewan.website.service;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
+import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.dedorewan.website.dao.IEmployeeRepository;
+import com.dedorewan.website.dao.IGroupRepository;
 import com.dedorewan.website.dao.IProjectRepository;
 import com.dedorewan.website.dom.Project;
 import com.dedorewan.website.dom.Project.STATUS;
@@ -16,7 +21,13 @@ public class ProjectService implements IProjectService {
 
 	@Autowired
 	private IProjectRepository projectRepository;
+	
+	@Autowired
+	IEmployeeRepository employeeRepository;
 
+	@Autowired
+	IGroupRepository groupRepository;
+	
 	public List<Project> findAll() {
 		return projectRepository.findAllByOrderByProjectNumberAsc();
 	}
@@ -31,7 +42,9 @@ public class ProjectService implements IProjectService {
 	}
 
 	public void addProject(Project project) throws Exception {
-		//projectRepository.insert(project);
+		project.setGroup(groupRepository.findOne(project.getGroupId()));
+		project.setEmployees(employeeRepository.getAllEmployeeByVisa(project.getMembers()));
+		projectRepository.save(project);
 	}
 
 	public boolean projectNumberExisted(Long id, Integer project_number) {
@@ -51,12 +64,14 @@ public class ProjectService implements IProjectService {
 	}
 
 	public void updateProject(Project project) throws Exception {
-		/*try {
-			projectRepository.update(project);
+		try {
+			project.setGroup(groupRepository.findOne(project.getGroupId()));
+			project.setEmployees(employeeRepository.getAllEmployeeByVisa(project.getMembers()));
+			projectRepository.save(project);
 		} catch (StaleObjectStateException s) {
 			throw new CustomException("custom",
 					"Update Project Failed (Project has been updated or deleted by another user)");
-		}*/
+		}
 	}
 
 	public void deleteProject(Long id) throws Exception {
