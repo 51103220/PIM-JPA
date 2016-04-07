@@ -36,7 +36,7 @@ public class ProjectService implements IProjectService {
 	public Project getProject(Long id) throws Exception {
 		Project project = projectRepository.findOne(id);
 		if (project == null) {
-			throw new CustomException("custom", "requested project does not exist. Please reload Page");
+			throw new CustomException("projectNotFound", "requested project does not exist. Please reload Page");
 		}
 		return project;
 	}
@@ -68,10 +68,10 @@ public class ProjectService implements IProjectService {
 			project.setEmployees(employeeRepository.getAllEmployeeByVisa(project.getMembers()));
 			projectRepository.save(project);
 		} catch (StaleObjectStateException s) {
-			throw new CustomException("custom",
+			throw new CustomException("concurrentUpdate",
 					"Update Project Failed (Project has been updated or deleted by another user)");
 		} catch (OptimisticLockingFailureException e) {
-			throw new CustomException("custom",
+			throw new CustomException("concurrentUpdate",
 					"Update Project Failed (Project has been updated or deleted by another user)");
 		}
 	}
@@ -81,7 +81,7 @@ public class ProjectService implements IProjectService {
 		if (project != null) {
 			projectRepository.delete(project);
 		} else {
-			throw new CustomException("custom",
+			throw new CustomException("projectDeleted",
 					"Delete unsucessfully!!! Project has been deleted or updated. Please Reload Page");
 		}
 	}
