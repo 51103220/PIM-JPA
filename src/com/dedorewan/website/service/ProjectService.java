@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import com.dedorewan.website.dao.IEmployeeRepository;
@@ -21,13 +22,13 @@ public class ProjectService implements IProjectService {
 
 	@Autowired
 	private IProjectRepository projectRepository;
-	
+
 	@Autowired
 	IEmployeeRepository employeeRepository;
 
 	@Autowired
 	IGroupRepository groupRepository;
-	
+
 	public List<Project> findAll() {
 		return projectRepository.findAllByOrderByProjectNumberAsc();
 	}
@@ -35,8 +36,7 @@ public class ProjectService implements IProjectService {
 	public Project getProject(Long id) throws Exception {
 		Project project = projectRepository.findOne(id);
 		if (project == null) {
-			throw new CustomException("custom",
-					"requested project does not exist");
+			throw new CustomException("custom", "requested project does not exist. Please reload Page");
 		}
 		return project;
 	}
@@ -48,8 +48,7 @@ public class ProjectService implements IProjectService {
 	}
 
 	public boolean projectNumberExisted(Long id, Integer project_number) {
-		List<Project> projects = projectRepository
-				.findByProjectNumber(project_number);
+		List<Project> projects = projectRepository.findByProjectNumber(project_number);
 		if (projects.size() > 0) {
 			if (projects.get(0).getId() == id) {
 				return false;
@@ -71,14 +70,19 @@ public class ProjectService implements IProjectService {
 		} catch (StaleObjectStateException s) {
 			throw new CustomException("custom",
 					"Update Project Failed (Project has been updated or deleted by another user)");
+		} catch (OptimisticLockingFailureException e) {
+			throw new CustomException("custom",
+					"Update Project Failed (Project has been updated or deleted by another user)");
 		}
 	}
 
 	public void deleteProject(Long id) throws Exception {
-		if (id != null && projectRepository.exists(id)) {
-			projectRepository.delete(id);
+		Project project = projectRepository.findOne(id);
+		if (project != null) {
+			projectRepository.delete(project);
 		} else {
-			new CustomException("custom", "delete unsucessfully.");
+			throw new CustomException("custom",
+					"Delete unsucessfully!!! Project has been deleted or updated. Please Reload Page");
 		}
 	}
 

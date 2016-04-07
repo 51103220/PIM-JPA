@@ -47,7 +47,7 @@ public class ProjectController {
 	JsonResponse jsonResponse;
 	private static final int FIRST_PAGE = 1;
 	private static final int DEFAULT_SELECTED = 1;
-	
+
 	/**
 	 * Bind Project Validation
 	 */
@@ -55,19 +55,18 @@ public class ProjectController {
 	public void dataBinding(WebDataBinder binder) {
 		binder.addValidators(projectValidator);
 	}
+
 	/**
 	 * Return modeAndView of Project List page with pagination
 	 */
-	private ModelAndView makeProjectModel(String view,
-			List<Project> projectList, Integer page, Integer selectedPage) {
+	private ModelAndView makeProjectModel(String view, List<Project> projectList, Integer page, Integer selectedPage) {
 		ModelAndView model = new ModelAndView(view);
-		model.addObject("projects",
-				projectService.projectsInPage(projectList, page));
-		model.addObject("pages",
-				projectService.numberPages(projectList, projectsPerPage));
+		model.addObject("projects", projectService.projectsInPage(projectList, page));
+		model.addObject("pages", projectService.numberPages(projectList, projectsPerPage));
 		model.addObject("selected", selectedPage);
 		return model;
 	}
+
 	/**
 	 * Return modeAndView of Project List page
 	 */
@@ -75,22 +74,17 @@ public class ProjectController {
 	@RequestMapping(method = RequestMethod.GET, value = "/listProject")
 	@ResponseBody
 	public ModelAndView listProjectPage(HttpServletRequest request) {
-		List<Project> projects = (List<Project>) request.getSession()
-				.getAttribute("projectList");
-		ModelAndView model = makeProjectModel("forms/projectList", projects,
-				FIRST_PAGE, DEFAULT_SELECTED);
+		List<Project> projects = (List<Project>) request.getSession().getAttribute("projectList");
+		ModelAndView model = makeProjectModel("forms/projectList", projects, FIRST_PAGE, DEFAULT_SELECTED);
 		return model;
 	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.GET, value = "projects/page/{page}")
 	@ResponseBody
-	public ModelAndView projectsPage(@PathVariable Integer page,
-			HttpServletRequest request) {
-		List<Project> projects = (List<Project>) request.getSession()
-				.getAttribute("projectList");
-		ModelAndView model = makeProjectModel("forms/projectList", projects,
-				page, page);
+	public ModelAndView projectsPage(@PathVariable Integer page, HttpServletRequest request) {
+		List<Project> projects = (List<Project>) request.getSession().getAttribute("projectList");
+		ModelAndView model = makeProjectModel("forms/projectList", projects, page, page);
 		return model;
 	}
 
@@ -105,8 +99,8 @@ public class ProjectController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/NewProject")
 	@ResponseBody
-	public JsonResponse newProject(@Validated @RequestBody Project project,
-			BindingResult result, HttpServletRequest request) throws Exception {
+	public JsonResponse newProject(@Validated @RequestBody Project project, BindingResult result,
+			HttpServletRequest request) throws Exception {
 		if (result.hasErrors()) {
 			jsonResponse.setStatus("FAIL");
 			jsonResponse.setResult(result.getFieldErrors());
@@ -138,8 +132,7 @@ public class ProjectController {
 	@ResponseBody
 	public ModelAndView resetCriteria(HttpServletRequest request) {
 		List<Project> projects = projectService.findAll();
-		ModelAndView model = makeProjectModel("forms/projectList", projects,
-				FIRST_PAGE, DEFAULT_SELECTED);
+		ModelAndView model = makeProjectModel("forms/projectList", projects, FIRST_PAGE, DEFAULT_SELECTED);
 		request.getSession().setAttribute("searchValue", "");
 		request.getSession().setAttribute("statusKey", null);
 		request.getSession().setAttribute("projectList", projects);
@@ -148,21 +141,17 @@ public class ProjectController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/filterProject")
 	@ResponseBody
-	public ModelAndView filterProjects(
-			@RequestParam(value = "keywords") String keywords,
-			@RequestParam(value = "statusKey") STATUS statusKey,
-			HttpServletRequest request) {
+	public ModelAndView filterProjects(@RequestParam(value = "keywords") String keywords,
+			@RequestParam(value = "statusKey") STATUS statusKey, HttpServletRequest request) {
 
 		if (statusKey == null && keywords == "") {
 			return resetCriteria(request);
 		} else {
-			List<Project> projects = projectService.filterProjects(keywords,
-					statusKey);
+			List<Project> projects = projectService.filterProjects(keywords, statusKey);
 			request.getSession().setAttribute("searchValue", keywords);
 			request.getSession().setAttribute("statusKey", statusKey);
 			request.getSession().setAttribute("projectList", projects);
-			ModelAndView model = makeProjectModel("forms/projectList",
-					projects, FIRST_PAGE, DEFAULT_SELECTED);
+			ModelAndView model = makeProjectModel("forms/projectList", projects, FIRST_PAGE, DEFAULT_SELECTED);
 			if (projects.size() == 0) {
 				model.addObject("searchResult", "No Results Found");
 			}
@@ -172,16 +161,18 @@ public class ProjectController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/project/{id}/delete")
 	@ResponseBody
-	public String deleteProject(@PathVariable Long id) throws Exception {
+	public String deleteProject(@PathVariable Long id, HttpServletRequest request) throws Exception {
 		projectService.deleteProject(id);
+		request.getSession().setAttribute("projectList", projectService.findAll());
 		return "success";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/deleteMultiple")
 	@ResponseBody
-	public String deleteProjects(@RequestParam(value = "ids[]") Long[] ids)
+	public String deleteProjects(@RequestParam(value = "ids[]") Long[] ids, HttpServletRequest request)
 			throws Exception {
 		projectService.deleteProjects(ids);
+		request.getSession().setAttribute("projectList", projectService.findAll());
 		return "success";
 	}
 
@@ -193,8 +184,8 @@ public class ProjectController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/EditProject")
 	@ResponseBody
-	public JsonResponse editProject(@Validated @RequestBody Project project,
-			BindingResult result,HttpServletRequest request) throws Exception {
+	public JsonResponse editProject(@Validated @RequestBody Project project, BindingResult result,
+			HttpServletRequest request) throws Exception {
 
 		if (result.hasErrors()) {
 			jsonResponse.setStatus("FAIL");
