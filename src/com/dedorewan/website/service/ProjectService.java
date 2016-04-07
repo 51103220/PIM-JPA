@@ -3,7 +3,6 @@ package com.dedorewan.website.service;
 import java.util.List;
 
 import javax.transaction.Transactional;
-import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dedorewan.website.dao.IProjectRepository;
@@ -32,7 +31,7 @@ public class ProjectService implements IProjectService {
 	}
 
 	public void addProject(Project project) throws Exception {
-		projectRepository.insert(project);
+		//projectRepository.insert(project);
 	}
 
 	public boolean projectNumberExisted(Long id, Integer project_number) {
@@ -52,12 +51,12 @@ public class ProjectService implements IProjectService {
 	}
 
 	public void updateProject(Project project) throws Exception {
-		try {
+		/*try {
 			projectRepository.update(project);
 		} catch (StaleObjectStateException s) {
 			throw new CustomException("custom",
 					"Update Project Failed (Project has been updated or deleted by another user)");
-		}
+		}*/
 	}
 
 	public void deleteProject(Long id) throws Exception {

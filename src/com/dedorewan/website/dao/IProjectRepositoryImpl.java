@@ -2,15 +2,10 @@ package com.dedorewan.website.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import com.dedorewan.website.dom.Project;
 import com.dedorewan.website.dom.Project.STATUS;
 
@@ -23,9 +18,6 @@ public class IProjectRepositoryImpl implements IProjectRepositoryCustom {
 
 	@Autowired
 	IGroupRepository groupRepository;
-
-	@Autowired
-	private SessionFactory sessionFactory;
 
 	@Value("${projects.maxProjectPerPage}")
 	Integer projectsPerPage;
@@ -94,34 +86,5 @@ public class IProjectRepositoryImpl implements IProjectRepositoryCustom {
 			return true;
 		}
 		return false;
-	}
-
-	public void insert(Project project) throws Exception {
-		project.setVersion(2050512000);
-		project.setGroup(groupRepository.getOne(project.getGroupId()));
-		project.setEmployees(employeeRepository.getAllEmployeeByVisa(project
-				.getMembers()));
-		Session session = sessionFactory.getCurrentSession();
-		session.merge(project);
-	}
-
-	public void update(Project project) throws Exception {
-		project.setGroup(groupRepository.getOne(project.getGroupId()));
-		project.setEmployees(employeeRepository.getAllEmployeeByVisa(project
-				.getMembers()));
-		Session session = sessionFactory.getCurrentSession();
-		session.merge(project);
-	}
-
-	public void delete(Long id) throws Exception {
-		Session session = sessionFactory.getCurrentSession();
-		Project existing_project = (Project) session.get(Project.class, id);
-		if (existing_project != null
-				&& existing_project.getStatus() == STATUS.NEW) {
-			existing_project.setGroup(null);
-			existing_project.getEmployees().clear();
-			session.delete(existing_project);
-		}
-
 	}
 }

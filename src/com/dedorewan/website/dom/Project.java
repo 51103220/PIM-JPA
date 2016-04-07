@@ -76,8 +76,7 @@ public class Project implements Serializable  {
 	@Column(name = "VERSION", nullable = false)
 	private Integer version;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,
-			CascadeType.REMOVE })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE})
 	@JoinTable(name = "PROJECT_EMPLOYEE", joinColumns = { @JoinColumn(name = "PROJECT_ID", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "EMPLOYEE_ID", nullable = false) })
 	private List<Employee> employees;
 

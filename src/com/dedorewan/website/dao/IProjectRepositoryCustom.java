@@ -14,10 +14,4 @@ public interface IProjectRepositoryCustom {
 
 	boolean visaExsisted(String visa);
 	
-	void insert(Project project) throws Exception;
-	
-	void update(Project project) throws Exception;
-	
-	public void delete(Long id) throws Exception;
-	
 }
