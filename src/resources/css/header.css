@@ -1,0 +1,46 @@
+.navbar.header {
+	padding-top: 10px;
+	font-weight: bold;
+	padding-bottom: 10px;
+	border-right: 0px !important;
+	background-color: #F5F5F5 !important;
+}
+
+
+#headingNavbar{
+	float:right;
+}
+
+.navbar.header #projectName {
+	margin-left: 20px;
+	margin-top: 10px;
+	font-size: 17pt !important;
+	font-weight: 700;
+	color: #6F6565;
+}
+.navbar-right {
+	float: left !important;
+}
+.navbar.header #funcOption {
+	margin-top: 15px;
+}
+
+.navbar.header #langOption {
+	margin-right: 80px;
+	margin-top: 15px;
+}
+
+.navbar.header #langOption>li>a {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+.navbar.header li>a {
+	color: #2F85FA !important;
+	font-family: "Segoe UI Semibold";
+	size: 14pt;
+}
+
+.navbar.header li>a.selected {
+	color: #666666 !important;
+}

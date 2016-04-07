@@ -1,0 +1,19 @@
+#main #errorContent #errorLogo{
+	text-align: center;
+	color: #D2492A;
+	font-size: 150pt;
+	padding-top: 50px;
+}
+
+#main #errorContent #errorMessage{
+	padding-top: 100px;
+	font-family: "Segoe UI Semibold";
+	color: #666666;
+	font-size:18pt;
+}
+#main #errorContent #errorMessage #message a{
+	color:#D2492A !important;
+}
+#main #errorContent #errorMessage #backLink{
+	margin-top: 30px;
+}
