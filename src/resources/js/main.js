@@ -139,10 +139,10 @@ $(document).ready(function() {
 	 * *Date Picking event
 	 **************************************************************************/
 	$('#main #contentBody').on("click", ".datePicker", function(){
-		$(this).datepicker({ dateFormat: 'dd, MM, yy' });
+		$(this).datepicker({ dateFormat: 'dd-mm-yy' });
 	});
 	$('#main #contentBody').on("focus", ".datePicker", function(){
-		$(this).datepicker({ dateFormat: 'dd, MM, yy' });
+		$(this).datepicker({ dateFormat: 'dd-mm-yy' });
 	});
 	$('#main #contentBody').on("click", ".datePickerIcon",function(e){
 		e.preventDefault();
@@ -187,12 +187,18 @@ $(document).ready(function() {
 					values[$(this).attr("name")] = val ;
 			}
 			if($(this).attr("name") == "startDate" || $(this).attr("name") == "endDate" ){
-				var date = new Date($(this).val());
-				if (date == "Invalid Date"){
-					values[$(this).attr("name")] = null;
+				if($(this).val()){
+					var from = $(this).val().split("-");
+					var date = new Date(from[2], from[1] - 1, from[0]);
+					if (date == "Invalid Date"){
+						values[$(this).attr("name")] = null;
+					}
+					else{
+						values[$(this).attr("name")] =  date.getFullYear() + "-" + (date.getMonth()+1) +"-" + date.getDate();
+					}
 				}
 				else{
-					values[$(this).attr("name")] =  date.getFullYear() + "-" + (date.getMonth()+1) +"-" + date.getDate(); 
+					values[$(this).attr("name")] = null;
 				}
 			}
 		});

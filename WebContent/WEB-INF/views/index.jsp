@@ -32,6 +32,7 @@
 <link href="${jqueryUICSS}" rel="stylesheet" />
 <script src="${jquery}"></script>
 <script src="${tablesorterJS}"></script>
+
 <title><spring:message code="application.tittle" /></title>
 </head>
 <body>
