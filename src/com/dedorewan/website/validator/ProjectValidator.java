@@ -43,18 +43,22 @@ public class ProjectValidator implements Validator {
 		if (project.getProjectNumber() == null) {
 			errors.rejectValue("projectNumber", "NotNull", "Project Number must not be left empty");
 		} else if (project.getProjectNumber() <= 0) {
-			errors.rejectValue("projectNumber", "NotLessThan", "Project Number must be greater than 0");
+			message = messageSource.getMessage("errors.projectNumberLessThanZero", new Object[] {}, locale);
+			errors.rejectValue("projectNumber", "NotLessThan", message);
 		} else if (project.getProjectNumber() >= 10000) {
-			errors.rejectValue("projectNumber", "GreaterThan", "Project Number must be 4 digits");
+			message = messageSource.getMessage("errors.projectNumberGreateThan", new Object[] {}, locale);
+			errors.rejectValue("projectNumber", "GreaterThan", message);
 		}
 		if (project.getName().length() == 0) {
 			errors.rejectValue("name", "NotEmpty", "Project Name must not be left empty");
 		}
 		if (project.getName().length() > 50) {
-			errors.rejectValue("name", "InvalidLength", "Project Name must be less than 50 characters");
+			message = messageSource.getMessage("errors.projectNumber50", new Object[] {}, locale);
+			errors.rejectValue("name", "InvalidLength", message);
 		}
 		if (project.getCustomer().length() > 50) {
-			errors.rejectValue("customer", "InvalidLength", "Customer Name must be less than 50 characters");
+			message = messageSource.getMessage("errors.customer50", new Object[] {}, locale);
+			errors.rejectValue("customer", "InvalidLength", message);
 		}
 		if (project.getCustomer().length() == 0) {
 			errors.rejectValue("customer", "NotEmpty", "Customer Name must not be left empty");
@@ -67,7 +71,8 @@ public class ProjectValidator implements Validator {
 		}
 		if (project.getEndDate() != null && project.getStartDate() != null
 				&& project.getEndDate().before(project.getStartDate())) {
-			errors.rejectValue("endDate", "DateNotValid", "End Date must be after Start Date");
+			message = messageSource.getMessage("errors.startDateEndDate", new Object[] {}, locale);
+			errors.rejectValue("endDate", "DateNotValid", message);
 		}
 		if (projectService.projectNumberExisted(project.getId(), project.getProjectNumber())) {
 			message = messageSource.getMessage("errors.projectNumberExisted", new Object[] {}, locale);
