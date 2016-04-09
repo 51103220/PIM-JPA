@@ -535,13 +535,13 @@ $(document).ready(function() {
 			var content = "";
 			var i,len= 0;
 			for(i=0,len = data.length;i<len; i++){
-				content = content + "<li><a tabIndex='-1' id ='" + data[i].visa +"' href='#' class='visaLink'>" +data[i].visa+": "+data[i].fullName + "</a></li>"
+				content = content + "<li><a tabIndex='-1' id ='" + data[i].visa +"' href='#' class='visaLink'>" +data[i].visa+": "+data[i].firstName + " "+data[i].lastName +"</a></li>"
 			}
 			
 			 $(".visaList").html(content);
 			 $(".visaList").show();
 		}).fail(function(jqXHR, textStatus, errorThrown) {
-			window.location.href = $(".header #projectName").attr("href") + "/errorsunexpected=" + errorThrown;
+			window.location.href = $(".header #projectName").attr("href") + "/errorsunexpected=" + jqXHR.responseText;
 		});
 		
 	 });

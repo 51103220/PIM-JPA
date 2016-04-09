@@ -1,5 +1,6 @@
 package com.dedorewan.website.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.dedorewan.website.dao.IEmployeeRepository;
 import com.dedorewan.website.dao.IGroupRepository;
 import com.dedorewan.website.dao.IProjectRepository;
+import com.dedorewan.website.dom.Employee;
 import com.dedorewan.website.dom.Project;
 import com.dedorewan.website.dom.Project.STATUS;
 import com.dedorewan.website.exception.CustomException;
@@ -33,6 +35,14 @@ public class ProjectService implements IProjectService {
 		return projectRepository.findAllByOrderByProjectNumberAsc();
 	}
 
+	private List<Employee> getAllEmployeeByVisa(String[] visas) {
+		List<Employee> employees = new ArrayList<Employee>();
+		for (String visa : visas) {
+			employees.addAll(employeeRepository.findByVisa(visa));
+		}
+		return employees;
+	}
+
 	public Project getProject(Long id) throws Exception {
 		Project project = projectRepository.findOne(id);
 		if (project == null) {
@@ -43,7 +53,7 @@ public class ProjectService implements IProjectService {
 
 	public void addProject(Project project) throws Exception {
 		project.setGroup(groupRepository.findOne(project.getGroupId()));
-		project.setEmployees(employeeRepository.getAllEmployeeByVisa(project.getMembers()));
+		project.setEmployees(getAllEmployeeByVisa(project.getMembers()));
 		projectRepository.save(project);
 	}
 
@@ -65,7 +75,7 @@ public class ProjectService implements IProjectService {
 	public void updateProject(Project project) throws Exception {
 		try {
 			project.setGroup(groupRepository.findOne(project.getGroupId()));
-			project.setEmployees(employeeRepository.getAllEmployeeByVisa(project.getMembers()));
+			project.setEmployees(getAllEmployeeByVisa(project.getMembers()));
 			projectRepository.save(project);
 		} catch (StaleObjectStateException s) {
 			throw new CustomException("concurrentUpdate",

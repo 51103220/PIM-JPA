@@ -14,10 +14,7 @@ public class IProjectRepositoryImpl implements IProjectRepositoryCustom {
 	private EntityManager entityManager;
 
 	@Autowired
-	IEmployeeRepository employeeRepository;
-
-	@Autowired
-	IGroupRepository groupRepository;
+	private IEmployeeRepository employeeRepository;
 
 	@Value("${projects.maxProjectPerPage}")
 	Integer projectsPerPage;

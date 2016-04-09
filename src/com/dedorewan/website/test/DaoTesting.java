@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
+
 import com.dedorewan.website.configuration.HibernateConfiguration;
 import com.dedorewan.website.configuration.PIMConfiguration;
 import com.dedorewan.website.dao.IEmployeeRepository;
@@ -26,6 +28,7 @@ import com.dedorewan.website.service.IProjectService;
 @TransactionConfiguration
 @ContextConfiguration(classes = { PIMConfiguration.class,
 		HibernateConfiguration.class })
+@WebAppConfiguration
 public class DaoTesting {
 
 	@PersistenceContext
@@ -42,8 +45,9 @@ public class DaoTesting {
 	public void testSaveProject() {
 		List<Project> projects = projectService.findAll();
 		Integer size = projects.size();
-		Project project = new Project(Long.valueOf(1), Long.valueOf(1), 1250, "TEST SAVE PROJECT", "NTT",
+		Project project = new Project(Long.valueOf(1), Long.valueOf(21), 1250, "TEST SAVE PROJECT", "NTT",
 				STATUS.NEW, new Date(), new Date(), 10000);
+		project.setMembers(new String[]{"THY","QNK"});
 		try {
 			projectService.addProject(project);
 		} catch (Exception e) {

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "EMPLOYEE")
 public class Employee implements Serializable{
@@ -40,9 +41,8 @@ public class Employee implements Serializable{
 	@Version
 	@Column(name = "VERSION", nullable = false)
 	private Long version;
-
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "employees")
-
+	@JsonIgnore
+	@ManyToMany(mappedBy = "employees")
 	private List<Project> projects;
 
 	@Transient
