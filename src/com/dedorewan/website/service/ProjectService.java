@@ -26,10 +26,10 @@ public class ProjectService implements IProjectService {
 	private IProjectRepository projectRepository;
 
 	@Autowired
-	IEmployeeRepository employeeRepository;
+	private IEmployeeRepository employeeRepository;
 
 	@Autowired
-	IGroupRepository groupRepository;
+	private IGroupRepository groupRepository;
 
 	public List<Project> findAll() {
 		return projectRepository.findAllByOrderByProjectNumberAsc();
@@ -59,13 +59,7 @@ public class ProjectService implements IProjectService {
 
 	public boolean projectNumberExisted(Long id, Integer project_number) {
 		List<Project> projects = projectRepository.findByProjectNumber(project_number);
-		if (projects.size() > 0) {
-			if (projects.get(0).getId() == id) {
-				return false;
-			} else
-				return true;
-		} else
-			return false;
+		return projects.size() > 0 && projects.get(0).getId() != id;
 	}
 
 	public boolean visaExsisted(String visa) {
