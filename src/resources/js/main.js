@@ -297,9 +297,17 @@ $(document).ready(function() {
 		$("#dialog").dialog({
 	      buttons : {
 	        "Delete" : function() {
+	        	var values = {};
+	        	var pattern = link.attr("id").split("-");
+	        	values['id'] = pattern[0];
+	        	values['version'] = pattern[1];
+	        	values['status'] = pattern[2];
 	        	$.ajax({
+	        		contentType : 'application/json',
 	    			method : "POST",
-	    			url : link.attr("href")
+	    			url : link.attr("href"),
+	    			dataType : 'json',
+	    			data : JSON.stringify(values)
 	    		}).done(function(data) {
 	    			link.parent().parent().remove();
 	    		}).fail(function(jqXHR, textStatus,errorThrown) {

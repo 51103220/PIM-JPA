@@ -20,7 +20,7 @@ public interface IProjectService {
 
 	void updateProject(Project project) throws Exception;
 
-	void deleteProject(Long id) throws Exception;
+	void deleteProject(Project project) throws Exception;
 
 	void deleteProjects(Long[] ids) throws Exception;
 

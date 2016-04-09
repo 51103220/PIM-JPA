@@ -161,10 +161,12 @@ public class ProjectController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/project/{id}/delete")
 	@ResponseBody
-	public String deleteProject(@PathVariable Long id, HttpServletRequest request) throws Exception {
-		projectService.deleteProject(id);
+	public JsonResponse deleteProject(@RequestBody Project project, @PathVariable Long id, HttpServletRequest request)
+			throws Exception {
+		projectService.deleteProject(project);
 		request.getSession().setAttribute("projectList", projectService.findAll());
-		return "success";
+		jsonResponse.setStatus("SUCCESS");
+		return jsonResponse;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/deleteMultiple")

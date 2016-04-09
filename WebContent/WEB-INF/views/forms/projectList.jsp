@@ -105,7 +105,7 @@
 							<fmt:formatDate value="${project.getStartDate()}"
 								var="dateString" pattern="dd.MM.yyyy" />
 							<td class="col5 dateAlign">${dateString}</td>
-							<td align="center"><a
+							<td align="center"><a id="${project.getId()}-${project.getVersion()}-${project.getStatus()}" 
 								href="project/${project.getId()}/delete" class="deleteIcon">
 									<c:choose>
 										<c:when test="${project.isNew()}">

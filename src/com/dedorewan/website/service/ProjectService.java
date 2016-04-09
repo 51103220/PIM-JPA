@@ -80,20 +80,27 @@ public class ProjectService implements IProjectService {
 		}
 	}
 
-	public void deleteProject(Long id) throws Exception {
-		Project project = projectRepository.findOne(id);
-		if (project != null) {
-			projectRepository.delete(project);
+	public void deleteProject(Project project) throws Exception {
+		if (projectRepository.exists(project.getId()) && project.getStatus() == STATUS.NEW) {
+			try {
+				projectRepository.delete(project);
+			} catch (OptimisticLockingFailureException e) {
+				throw new CustomException("concurrentDelete",
+						"Delete Project Failed (Project has been updated or deleted by another user)");
+			} catch (StaleObjectStateException s) {
+				throw new CustomException("concurrentDelete",
+						"Delete Project Failed (Project has been updated or deleted by another user)");
+			}
 		} else {
 			throw new CustomException("projectDeleted",
-					"Delete unsucessfully!!! Project has been deleted or updated. Please Reload Page");
+					"Delete unsucessfully!!! Project has been deleted or updated or not a new Project. Please Reload Page");
 		}
 	}
 
 	public void deleteProjects(Long[] ids) throws Exception {
-		for (long id : ids) {
-			deleteProject(id);
-		}
+		/*
+		 * for (long id : ids) { //deleteProject(id); }
+		 */
 	}
 
 	public List<Project> filterProjects(String keywords, STATUS statusKey) {
