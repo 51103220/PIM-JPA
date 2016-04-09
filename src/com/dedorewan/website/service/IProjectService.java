@@ -22,7 +22,7 @@ public interface IProjectService {
 
 	void deleteProject(Project project) throws Exception;
 
-	void deleteProjects(Long[] ids) throws Exception;
+	void deleteProjects(List<Project> projects) throws Exception;
 
 	Integer numberPages(List<Project> projects, Integer maxProjects);
 

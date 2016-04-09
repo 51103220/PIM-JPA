@@ -1,9 +1,7 @@
 package com.dedorewan.website.controller;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -169,15 +167,7 @@ public class ProjectController {
 		return jsonResponse;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/deleteMultiple")
-	@ResponseBody
-	public String deleteProjects(@RequestParam(value = "ids[]") Long[] ids, HttpServletRequest request)
-			throws Exception {
-		projectService.deleteProjects(ids);
-		request.getSession().setAttribute("projectList", projectService.findAll());
-		return "success";
-	}
-
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/getVisas")
 	@ResponseBody
 	public List<Employee> getVisas() {

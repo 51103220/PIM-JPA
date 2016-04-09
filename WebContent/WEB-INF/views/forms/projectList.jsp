@@ -95,7 +95,8 @@
 				<tbody>
 					<c:forEach items="${projects}" var="project">
 						<tr>
-							<td align="center"><input id="${project.getId()}"
+							<td align="center"><input
+								id="${project.getId()}-${project.getVersion()}-${project.getStatus()}"
 								type="checkbox" class="checkIcon" value="${project.isNew()}"></td>
 							<td class="col1" align="right"><a
 								href="project/${project.getId()}/detail" class="projectDetail">${project.getProjectNumber()}</a></td>
@@ -105,7 +106,8 @@
 							<fmt:formatDate value="${project.getStartDate()}"
 								var="dateString" pattern="dd.MM.yyyy" />
 							<td class="col5 dateAlign">${dateString}</td>
-							<td align="center"><a id="${project.getId()}-${project.getVersion()}-${project.getStatus()}" 
+							<td align="center"><a
+								id="${project.getId()}-${project.getVersion()}-${project.getStatus()}"
 								href="project/${project.getId()}/delete" class="deleteIcon">
 									<c:choose>
 										<c:when test="${project.isNew()}">

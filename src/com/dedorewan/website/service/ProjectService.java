@@ -97,10 +97,10 @@ public class ProjectService implements IProjectService {
 		}
 	}
 
-	public void deleteProjects(Long[] ids) throws Exception {
-		/*
-		 * for (long id : ids) { //deleteProject(id); }
-		 */
+	public void deleteProjects(List<Project> projects) throws Exception {
+		for(Project project: projects){
+			deleteProject(project);
+		}
 	}
 
 	public List<Project> filterProjects(String keywords, STATUS statusKey) {

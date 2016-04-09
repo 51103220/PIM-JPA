@@ -335,11 +335,18 @@ $(document).ready(function() {
 		e.preventDefault();
 		var ids = [];
 		var boxes = $("#projectList #searchDatas input:checked");
-	
+		var projects = [];
+		var data = {};
 		boxes.each(function(){
 			var box = $(this);
 			if(box.val() == "true"){
-				ids.push(box.attr("id"));
+				var pattern = box.attr("id").split("-");
+				var values = {};
+				ids.push(pattern[0]);
+				values['id'] = pattern[0];
+	        	values['version'] = pattern[1];
+	        	values['status'] = pattern[2];
+	        	projects.push(values);
 			}
 		});
 		if(!ids.length){
@@ -351,11 +358,11 @@ $(document).ready(function() {
 		      buttons : {
 		        "Delete" : function() {
 		        	$.ajax({
+		        		contentType : 'application/json',
 		    			method : "POST",
 		    			url : link.attr("href"),
-		    			data: {
-		    				ids: ids
-		    			}
+		    			dataType : 'json',
+		    			data: JSON.stringify(projects)
 		    		}).done(function(data) {
 		    			boxes.each(function(){
 		    				var box = $(this);
