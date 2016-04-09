@@ -131,7 +131,7 @@
 				<label class="control-label col-sm-3" for="startDate"><spring:message
 						code="form.startdate" /><span class="isRequired">*</span> </label>
 				<fmt:formatDate value="${project.getStartDate()}"
-					var="startDateString" pattern="dd/MM/yyyy" />
+					var="startDateString" pattern="dd-MM-yyyy" />
 				<div class="col-sm-4">
 					<div class='input-group date shortWidth'>
 						<input type='text' class="form-control datePicker" id="startDate"
@@ -145,7 +145,7 @@
 				<label class="control-label col-sm-2" for="endDate"><spring:message
 						code="form.enddate" /> </label>
 				<fmt:formatDate value="${project.getEndDate()}" var="endDateString"
-					pattern="dd/MM/yyyy" />
+					pattern="dd-MM-yyyy" />
 				<div class="col-sm-3 ">
 					<div class='input-group date expand'>
 						<input type='text' class="form-control datePicker" id="endDate"
