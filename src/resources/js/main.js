@@ -175,6 +175,13 @@ $(document).ready(function() {
 			else{
 				values[$(this).attr("name")] = $(this).val();
 			}
+			if($(this).attr("name") == "projectNumber"){
+				if(Number($(this).val())<-2147483648){
+					values[$(this).attr("name")] = -1;
+				}if(Number($(this).val())>2147483647){
+					values[$(this).attr("name")] = 10000;
+				}
+			}
 			if($(this).attr("name") == "members"){
 					var val = $(this).val().replace(/ /g,'').split(",");
 					
