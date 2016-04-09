@@ -140,9 +140,11 @@ $(document).ready(function() {
 	 **************************************************************************/
 	$('#main #contentBody').on("click", ".datePicker", function(){
 		$(this).datepicker({ dateFormat: 'dd, MM, yy' });
+		$(this).datepicker('setDate', new Date());
 	});
 	$('#main #contentBody').on("focus", ".datePicker", function(){
 		$(this).datepicker({ dateFormat: 'dd, MM, yy' });
+		$(this).datepicker('setDate', new Date());
 	});
 	$('#main #contentBody').on("click", ".datePickerIcon",function(e){
 		e.preventDefault();
