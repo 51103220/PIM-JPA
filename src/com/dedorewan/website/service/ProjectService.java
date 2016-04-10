@@ -2,11 +2,14 @@ package com.dedorewan.website.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.transaction.Transactional;
 
 import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +28,16 @@ public class ProjectService implements IProjectService {
 	@Autowired
 	private IProjectRepository projectRepository;
 
+	private Locale locale;
+
 	@Autowired
 	private IEmployeeRepository employeeRepository;
 
 	@Autowired
 	private IGroupRepository groupRepository;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	public List<Project> findAll() {
 		return projectRepository.findAllByOrderByProjectNumberAsc();
@@ -44,9 +52,11 @@ public class ProjectService implements IProjectService {
 	}
 
 	public Project getProject(Long id) throws Exception {
+		locale = LocaleContextHolder.getLocale();
+		String message = messageSource.getMessage("concurrent.projectNotExist", new Object[] {}, locale);
 		Project project = projectRepository.findOne(id);
 		if (project == null) {
-			throw new CustomException("projectNotFound", "requested project does not exist. Please reload Page");
+			throw new CustomException("projectNotFound", message);
 		}
 		return project;
 	}
@@ -67,38 +77,43 @@ public class ProjectService implements IProjectService {
 	}
 
 	public void updateProject(Project project) throws Exception {
-		try {
-			project.setGroup(groupRepository.findOne(project.getGroupId()));
-			project.setEmployees(getAllEmployeeByVisa(project.getMembers()));
-			projectRepository.save(project);
-		} catch (StaleObjectStateException s) {
-			throw new CustomException("concurrentUpdate",
-					"Update Project Failed (Project has been updated or deleted by another user)");
-		} catch (OptimisticLockingFailureException e) {
-			throw new CustomException("concurrentUpdate",
-					"Update Project Failed (Project has been updated or deleted by another user)");
+		locale = LocaleContextHolder.getLocale();
+		String message = messageSource.getMessage("concurrent.update", new Object[] {}, locale);
+		if (projectRepository.exists(project.getId())) {
+			try {
+				project.setGroup(groupRepository.findOne(project.getGroupId()));
+				project.setEmployees(getAllEmployeeByVisa(project.getMembers()));
+				projectRepository.save(project);
+			} catch (StaleObjectStateException s) {
+				throw new CustomException("concurrentUpdate", message);
+			} catch (OptimisticLockingFailureException e) {
+				throw new CustomException("concurrentUpdate", message);
+			}
+		} else{
+			message = messageSource.getMessage("concurrent.updateDeleted", new Object[] {}, locale);
+			throw new CustomException("projectDeleted", message);
 		}
 	}
 
 	public void deleteProject(Project project) throws Exception {
+		locale = LocaleContextHolder.getLocale();
+		String message = messageSource.getMessage("concurrent.delete", new Object[] {}, locale);
 		if (projectRepository.exists(project.getId()) && project.getStatus() == STATUS.NEW) {
 			try {
 				projectRepository.delete(project);
 			} catch (OptimisticLockingFailureException e) {
-				throw new CustomException("concurrentDelete",
-						"Delete Project Failed (Project has been updated or deleted by another user)");
+				throw new CustomException("concurrentDelete", message);
 			} catch (StaleObjectStateException s) {
-				throw new CustomException("concurrentDelete",
-						"Delete Project Failed (Project has been updated or deleted by another user)");
+				throw new CustomException("concurrentDelete", message);
 			}
 		} else {
-			throw new CustomException("projectDeleted",
-					"Delete unsucessfully!!! Project has been deleted or updated or not a new Project. Please Reload Page");
+			message = messageSource.getMessage("concurrent.projectDeleted", new Object[] {}, locale);
+			throw new CustomException("projectDeleted", message);
 		}
 	}
 
 	public void deleteProjects(List<Project> projects) throws Exception {
-		for(Project project: projects){
+		for (Project project : projects) {
 			deleteProject(project);
 		}
 	}
